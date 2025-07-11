@@ -33,4 +33,4 @@ export default function middleware(req: NextRequest, ev: NextFetchEvent) {
   return proxy(req) ?? clerk(req, ev)
 }
 
-export const config = { matcher: ['/:path*'], runtime: 'edge' }
+export const config = { matcher: ['/:path*'] }
