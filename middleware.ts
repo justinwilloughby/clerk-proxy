@@ -6,12 +6,9 @@ function proxyMiddleware(req: NextRequest) {
     const proxyHeaders = new Headers(req.headers)
     proxyHeaders.set('Clerk-Proxy-Url', process.env.NEXT_PUBLIC_CLERK_PROXY_URL || '')
     proxyHeaders.set('Clerk-Secret-Key', process.env.CLERK_SECRET_KEY || '')
-    // Derive the client IP. `NextRequest` doesn't expose an `ip` field in its
-    // type definition, but it may exist at runtime when deployed on Vercel.
-    // Fall back to the `X-Forwarded-For` header when it is not available.
-    const forwardedFor =
-      (req as any).ip || req.headers.get('X-Forwarded-For') || ''
-    proxyHeaders.set('X-Forwarded-For', forwardedFor)
+    proxyHeaders.set('X-Forwarded-For', req.headers.get('x-real-ip') || '')
+
+    console.log('proxyHeaders', proxyHeaders)
 
     const proxyUrl = new URL(req.url)
     proxyUrl.host = 'frontend-api.clerk.dev'
