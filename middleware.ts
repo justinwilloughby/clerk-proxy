@@ -26,6 +26,4 @@ export default function middleware(req: NextRequest, ev: NextFetchEvent) {
   return proxy(req) ?? clerk(req, ev)
 }
 
-export const config = {
-  matcher: ['/((?!_next|.*\\.(?:jpg|png|css|js)).*)', '/(api|trpc|__clerk)(.*)'],
-}
+export const config = { matcher: ['/:path*'], runtime: 'edge' }
