@@ -17,12 +17,19 @@ function proxy(req: NextRequest) {
   target.protocol = 'https'
   target.pathname = target.pathname.replace('/__clerk', '')
 
+  console.log('Proxy headers:',
+    proxyHeaders.get('Clerk-Secret-Key'),
+    proxyHeaders.get('Clerk-Proxy-Url'),
+    proxyHeaders.get('X-Forwarded-For')
+  )
+
   return NextResponse.rewrite(target, { request: { headers: proxyHeaders } })
 }
 
 const clerk = clerkMiddleware()
 
 export default function middleware(req: NextRequest, ev: NextFetchEvent) {
+  console.log('---- middleware hit for', req.url)
   return proxy(req) ?? clerk(req, ev)
 }
 
